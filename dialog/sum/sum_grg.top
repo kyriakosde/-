@@ -1,0 +1,7 @@
+topic: ~sum()
+language: grg
+u: (e:FrontTactilTouched) $cor=0 ^nextProposal
+u: (e:LeftBumperPressed) $x^sameProposal
+u: (e:RightBumperPressed) $cor=$cor ^sameProposal
+
+proposal: $x
