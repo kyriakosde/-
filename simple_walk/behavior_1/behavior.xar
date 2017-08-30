@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
+    <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+        <bitmap>media/images/box/root.png</bitmap>
+        <script language="4">
+            <content>
+                <![CDATA[]]>
+</content>
+        </script>
+        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+        <Timeline enable="0">
+            <BehaviorLayer name="behavior_layer1">
+                <BehaviorKeyframe name="keyframe1" index="1">
+                    <Diagram>
+                        <Box name="simple_walk" id="1" localization="8" tooltip="" x="231" y="276">
+                            <bitmap>media/images/box/box-python-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[import sys
+import motion
+import time
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        motionProxy = ALProxy("ALMotion")
+        pTimeLists = 1.0
+        pStiffnessLists = 1.0
+        pnames = "Body"
+        motionProxy.stiffnessInterpolation(pnames,pStiffnessLists,pTimeLists)
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+
+        try:
+            motionProxy = ALProxy("ALMotion")
+        except Exception, e:
+            print "Could not create proxy"
+
+        try:
+            postureProxy = ALProxy("ALRobotPosture")
+        except Exception, e:
+            print "Could not create proxy"
+
+        #Set NAO in Stiffness on
+        #StiffnessOn(motionProxy)
+        #Init position
+        postureProxy.goToPosture("StandInit",0.5)
+
+        #Enable arms
+        motionProxy.setWalkArmsEnabled(True,True)
+        motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION",True]])
+
+        #Target Velocity
+        x=-0.8
+        y=0
+        t=0
+        f=0
+        motionProxy.setWalkTargetVelocity(x,y,t,f)
+        time.sleep(4.0)
+
+
+        #Target Velocity
+        x=0.2
+        y=-0.5
+        t=0.2
+        f=0.5
+
+        motionProxy.setWalkTargetVelocity(x,y,t,f)
+
+        time.sleep(4.0)
+
+        #Arms
+        #Move the left arm
+        JointNames = ["LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+        #specify the position for each joint
+        Arm1=[-40, 25, 0, -40]
+        Arm1=[i* motion.TO_RAD for i in Arm1]
+        Arm2=[-10, 50, 0, -20]
+        Arm2=[i* motion.TO_RAD for i in Arm2]
+
+        pFractionMaxSpeed = 0.6
+
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm1,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm2,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm1,pFractionMaxSpeed)
+
+        time.sleep(2.0)
+
+        #Move the right arm
+        #specify the joints that will be used
+        JointNames = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+        #specify the position for each joint
+        Arm1=[-40, 25, 0, -40]
+        Arm1=[i* motion.TO_RAD for i in Arm1]
+        Arm2=[-40, 50, 0, -80]
+        Arm2=[i* motion.TO_RAD for i in Arm2]
+
+        pFractionMaxSpeed = 0.6
+
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm1,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm2,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm1,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm2,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm1,pFractionMaxSpeed)
+        motionProxy.angleInterpolationWithSpeed(JointNames,Arm2,pFractionMaxSpeed)
+
+
+        time.sleep(4.0)
+
+        #end walk
+        #Target Velocity
+        x=0
+        y=0
+        t=0
+        f=0
+        motionProxy.setWalkTargetVelocity(x,y,t,f)
+
+        self.onStopped() #activate the output of the box
+
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                        </Box>
+                        <Box name="arms" id="2" localization="8" tooltip="" x="241" y="77">
+                            <bitmap>media/images/box/box-python-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[import sys
+import motion
+import time
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        motionProxy = ALProxy("ALMotion")
+        pTimeLists = 1.0
+        pStiffnessLists = 1.0
+        pnames = "Body"
+        motionProxy.stiffnessInterpolation(pnames,pStiffnessLists,pTimeLists)
+
+
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        try:
+            motionProxy = ALProxy("ALMotion")
+        except Exception, e:
+            print "Could not create proxy"
+
+        try:
+            postureProxy = ALProxy("ALRobotPosture")
+        except Exception, e:
+            print "Could not create proxy"
+
+        #Set NAO in Stiffness on
+        #StiffnessOn(motionProxy)
+        #Init position
+        postureProxy.goToPosture("StandInit",0.5)
+
+        effectorName = "RArm"
+        space = motion.FRAME_ROBOT
+        useSensor = False
+        effectorInit = motionProxy.getPosition(effectorName,space,useSensor)
+
+        #Active LArm tracking
+        isEnabled = True
+        motionProxy.wbEnableEffectorControl(effectorName, isEnabled)
+
+        coef = -1.0
+
+        targetCoordinateList = [
+        [0.12, 0.0*coef, 0],
+        [0.12, 0*coef,-0.1],
+        [0.12, 0.5*coef,-0.1],
+        [0.12, 0.5*coef,0.1],
+        [0.12, -0.1*coef,0.1],
+        [0.12, -0.1*coef,-0.1],
+        [0.12, 0*coef,-0.1],
+        [0.12, 0*coef,-0.1],]
+
+        for targetCoordinate in targetCoordinateList:
+            targetCoordinate = [targetCoordinate[i] + effectorInit[i] for i in range(3)]
+            motionProxy.wbSetEffectorControl(effectorName, targetCoordinate)
+            time.sleep(4.0)
+
+        #Deactivate Head tracking
+        isEnabled = False
+        motionProxy.wbEnableEffectorControl(effectorName, isEnabled)
+        postureProxy.goToPosture("StandInit",0.5)
+
+        self.onStopped() #activate the output of the box
+
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                        </Box>
+                    </Diagram>
+                </BehaviorKeyframe>
+            </BehaviorLayer>
+        </Timeline>
+    </Box>
+</ChoregrapheProject>

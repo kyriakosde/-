@@ -1,0 +1,16 @@
+topic: ~step_by_step()
+language: enu
+
+proposal: take a cup and fill it with milk
+proposal: add 3 strawberries
+proposal: add some vanilla ice cream
+proposal: close the cup with the lid and shake it
+proposal: you did it! you can enjoy your milkshake
+
+u:(I want a milkshake)
+    ok, let's do it.
+    follow my instruction and say next when you are ready for the next step.
+
+u:(next) ^nextProposal
+u:(again) ^sameProposal
+u:(previous) ^previousProposal
